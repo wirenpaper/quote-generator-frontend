@@ -21,14 +21,7 @@ export default function Quotes() {
 
   return (
     <div>
-      <h1>Quotes</h1>
-      <ul>
-        {quotes.slice(0, 15).map((quote, index) => (
-          <li key={index}>
-            "{quote.text}" - {quote.author || "Unknown"}
-          </li>
-        ))}
-      </ul>
+      <h1 className="flex justify-center p-4">Project 3: Quote Generator</h1>
     </div>
   );
 }
