@@ -16,13 +16,13 @@ export default function Quotes() {
   useEffect(() => {
     async function fetchQuotes() {
       try {
-          const res = await fetch("https://type.fit/api/quotes");
-          data = await res.json();
-          const randomIndex = Math.floor(Math.random() * data.length);
-          if (flg == false) {
-              flg = true;
-              setQuote(data[randomIndex]);
-          }
+        const res = await fetch("https://type.fit/api/quotes");
+        data = await res.json();
+        const randomIndex = Math.floor(Math.random() * data.length);
+        if (flg == false) {
+          flg = true;
+          setQuote(data[randomIndex]);
+        }
       } catch {
         console.log("Error fetching quotes:", Error);
       } finally {
@@ -56,7 +56,14 @@ export default function Quotes() {
             </button>
           </div>
           {loading ? (
-            <div className="flex justify-center">Loading...</div>
+            <>
+              <h3 className="text-center">
+                <span>“</span>
+              </h3>
+              <i className="flex justify-center p-4">
+                - 
+              </i>
+            </>
           ) : (
             data.length > 0 && (
               <>
