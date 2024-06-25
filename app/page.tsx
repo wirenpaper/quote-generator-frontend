@@ -3,18 +3,31 @@
 import { useEffect, useState } from "react";
 
 interface Quote {
-  text: string;
+  text?: string;
   author?: string;
 }
+let data: Quote[];
+let flg = false;
 
 export default function Quotes() {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [quote, setQuote] = useState<Quote>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchQuotes() {
-      const res = await fetch("https://type.fit/api/quotes");
-      const data: Quote[] = await res.json();
-      setQuotes(data);
+      try {
+          const res = await fetch("https://type.fit/api/quotes");
+          data = await res.json();
+          const randomIndex = Math.floor(Math.random() * data.length);
+          if (flg == false) {
+              flg = true;
+              setQuote(data[randomIndex]);
+          }
+      } catch {
+        console.log("Error fetching quotes:", Error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchQuotes();
   }, []);
@@ -29,17 +42,34 @@ export default function Quotes() {
           <div className="flex justify-center">
             <button
               className="border border-gray-500 m-4
-          py-0.5 flex px-2 bg-gray-200 text-xs"
+              py-0.5 flex px-2 bg-gray-200 text-xs"
+              onClick={() => {
+                if (data.length > 0) {
+                  // Ensures there are quotes before accessing
+                  const randomIndex = Math.floor(Math.random() * data.length);
+                  setQuote(data[randomIndex]);
+                  console.log("quotes length", data.length);
+                }
+              }}
             >
               New Quote
             </button>
           </div>
-          <h3 className="text-center">
-            <span>“</span>
-            Genius is one percent inspiration and ninety-nine percent
-            perspiration.
-          </h3>
-          <i className="flex justify-center p-4">- Thomas edison</i>
+          {loading ? (
+            <div className="flex justify-center">Loading...</div>
+          ) : (
+            data.length > 0 && (
+              <>
+                <h3 className="text-center">
+                  <span>“</span>
+                  {quote?.text} {/* Use optional chaining */}
+                </h3>
+                <i className="flex justify-center p-4">
+                  - {quote?.author} {/* Use optional chaining */}
+                </i>
+              </>
+            )
+          )}
         </div>
       </div>
     </div>
